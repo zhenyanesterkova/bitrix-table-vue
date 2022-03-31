@@ -1,17 +1,17 @@
-import {Vue} from 'ui.vue';
+import { Vue } from 'ui.vue';
 
 Vue.component('bx-table-head', {
 	props: {
 		head: {
-		  type: String,
-		  required: true,
+			type: String,
+			required: true,
 		},
-	  },
-	  template: `
+	},
+	template: `
 	  	<div>
 	  		<div class="title">
 			  <slot name="sorter"></slot>
-			  {{ head }}
+			  {{head}}
 			</div>
 	  		<slot name="filter"></slot>
 		</div> 

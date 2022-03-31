@@ -9,13 +9,13 @@ return [
 	'js' => 'dist/table.bundle.js',
 	'rel' => [
 		'main.polyfill.core',
-		'ui.vue',
 		'denvic.table.loader',
 		'denvic.table.filters',
 		'denvic.table.sorters',
 		'denvic.table.table-head',
 		'denvic.table.paginators',
 		'denvic.table.vue-table',
+		'ui.vue',
 	],
 	'skip_core' => true,
 ];

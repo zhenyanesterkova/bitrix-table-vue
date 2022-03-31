@@ -38,7 +38,7 @@ export default {
             const bottomPosition = this.infScrollBottomPosition;
             const triggerOffset = this.infScrollTriggerOffset;
 
-            if ((bottomPosition - currentPosition - viewportHeight) < triggerOffset) {
+            if (this.infScrollable && ((bottomPosition - currentPosition - viewportHeight) < triggerOffset)) {
                 this.updateData(true);
             }
         },

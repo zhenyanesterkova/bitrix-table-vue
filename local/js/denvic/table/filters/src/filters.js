@@ -1,7 +1,7 @@
-import {Vue} from 'ui.vue'
+import { Vue } from 'ui.vue'
 
 Vue.component('bx-filters', {
-	props: {
+    props: {
         filter: {
             type: String,
             default: "",
@@ -10,21 +10,21 @@ Vue.component('bx-filters', {
             type: String,
             required: true,
         },
-		sep: {
+        sep: {
             type: String,
             default: ":",
         },
-		type: {
-			type: String,
-			required: true,
+        type: {
+            type: String,
+            required: true,
             default: 'text'
-		  },
+        },
     },
     methods: {
         emitFilter(filter) {
             this.$emit("filter", { filter, column: this.column });
         },
-		setLeft(left) {
+        setLeft(left) {
             this.emitFilter(left || this.right ? `${left}:${this.right}` : "");
         },
         setRight(right) {
@@ -49,7 +49,8 @@ Vue.component('bx-filters', {
             return this.range[1];
         },
     },
-	template: `
+    template: `
+    <div>
     	<div>
     	  <div>
     	    От
@@ -72,5 +73,6 @@ Vue.component('bx-filters', {
       		  @change="emitFilter($event.target.value)"
       		/>
     	</div>
+        </div>
   	`,
 })

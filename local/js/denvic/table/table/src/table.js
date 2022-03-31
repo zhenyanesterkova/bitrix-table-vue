@@ -1,13 +1,13 @@
-import {Vue} from 'ui.vue';
- 
- import {TableLoader} from "denvic.table.loader";
- import {Filter} from "denvic.table.filters";
- import {SwitchSorter} from "denvic.table.sorters";
- import { updateData } from "./TestSource";
- import {MyTableHead} from "denvic.table.table-head";
- import {Paginator} from "denvic.table.paginators";
- import {VueTable} from "denvic.table.vue-table";
- import Filterable from "./mixins/Filterable";
+import { Vue } from 'ui.vue';
+
+import { TableLoader } from "denvic.table.loader";
+import { Filter } from "denvic.table.filters";
+import { SwitchSorter } from "denvic.table.sorters";
+import { updateData } from "./TestSource";
+import { MyTableHead } from "denvic.table.table-head";
+import { Paginator } from "denvic.table.paginators";
+import { VueTable } from "denvic.table.vue-table";
+import Filterable from "./mixins/Filterable";
 import Sortable from "./mixins/Sortable";
 import Paginable from "./mixins/Paginable";
 import InfScrollable from "./mixins/InfScrollable";
@@ -56,8 +56,7 @@ Vue.component('bx-table', {
 						v-bind:style="{height: virtualScrollTopFillerSize + 'px'}"
 					/>
 				</template>
-
-				<template v-for="column in columns" v-slot:column + '-head'="{ head }">
+				<template v-for="column in columns" v-slot:[\`\${column}-head\`]="{head}">
 					<bx-table-head v-bind:head="head" v-bind:key="column">
 						<template v-slot:sorter
 							><bx-sorters
@@ -74,7 +73,27 @@ Vue.component('bx-table', {
 								v-bind:type="filtersTypes[column]"
 								@filter="updateFilters($event)"
 						/></template>
-					</my-table-head>
+					</bx-table-head>
+				</template>
+
+				
+				<template v-slot:email-cell="{row}">
+					<a :href="\`mailto:\${row.email}\`">{{ row.email }}</a>
+				</template>
+
+				<template v-slot:end-tbody>
+					<tr
+						v-if="virtualScrollable"
+						v-bind:colspan="rowSize"
+						id="virtualScrollBottomFiller"
+						v-bind:style="\`height:\${virtualScrollBottomFillerSize}px\`"
+					/>
+					<tr
+						v-if="infScrollable"
+						v-bind:colspan="rowSize"
+						id="infScrollBottomAnchor"
+					/>
+					<bx-loader v-if="bottomLoader" v-bind:colspan="rowSize" />
 				</template>
 			</bx-vue-table>
 
@@ -89,45 +108,45 @@ Vue.component('bx-table', {
 	`,
 	data() {
 		return {
-		  	rows: [],
-			
-		  	columns: ["id", "age", "name", "login", "email"],
-		  	columnsHeads: {
+			rows: [],
+
+			columns: ["id", "age", "name", "login", "email"],
+			columnsHeads: {
 				id: "ID",
 				age: "Возраст",
 				name: "Имя",
 				login: "Логин",
 				email: "EMail",
-		  	},
-		  
-		  	filtersTypes: {
+			},
+
+			filtersTypes: {
 				id: "number",
 				age: "number",
 				name: "text",
 				login: "text",
 				email: "text",
-		  	},
-		  	filtersComponents: {
+			},
+			filtersComponents: {
 				id: 'bx-filters',
 				age: 'bx-filters',
 				name: 'bx-filters',
 				login: 'bx-filters',
 				email: 'bx-filters',
-		  	},
-		  
-		  	bottomLoader: false,
-		  
-		  	pageSize: 20,
-		  	totalPages: 0,
-		  
-		  	infScrollable: false,
-		  	infScrollStartSize: 100,
-		  	infScrollStepSize: 50,
-		  	infScrollTriggerOffset: 1000,
-		  
-		  	virtualScrollable: false,
-		  	virtualScrollBufferSize: 10,
-		  	virtualScrollRowHeight: 20,
+			},
+
+			bottomLoader: false,
+
+			pageSize: 20,
+			totalPages: 0,
+
+			infScrollable: false,
+			infScrollStartSize: 100,
+			infScrollStepSize: 50,
+			infScrollTriggerOffset: 1000,
+
+			virtualScrollable: false,
+			virtualScrollBufferSize: 10,
+			virtualScrollRowHeight: 20,
 		};
 	},
 	computed: {
@@ -135,24 +154,24 @@ Vue.component('bx-table', {
 			return this.columns.length;
 		},
 		sortsIndexes() {
-		  	return this.sortsOrder.reduce((res, column, index) => {
+			return this.sortsOrder.reduce((res, column, index) => {
 				res[column] = index + 1;
 				return res;
-		  	}, {});
+			}, {});
 		},
 		computedRows() {
-		  	return this.virtualScrollable ? this.virtualScrollRows : this.rows;
+			return this.virtualScrollable ? this.virtualScrollRows : this.rows;
 		},
 		computedGetKey() {
-		  	return this.virtualScrollable ? this.virtualScrollGetKey : this.getKey;
+			return this.virtualScrollable ? this.virtualScrollGetKey : this.getKey;
 		},
 		getKey(row) {
-		  	return row.id;
+			return row.id;
 		},
 	},
 	methods: {
 		updateData(infScroll) {
-		  	updateData(this, !infScroll);
+			updateData(this, !infScroll);
 		},
 	},
 	created() {
@@ -160,7 +179,7 @@ Vue.component('bx-table', {
 	},
 	watch: {
 		infScrollable() {
-		  (this.paginable = !this.infScrollable), this.updateData();
+			(this.paginable = !this.infScrollable), this.updateData();
 		},
 	},
 	mixins: [Filterable, Sortable, Paginable, InfScrollable, virtualScrollable],
