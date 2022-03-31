@@ -1,0 +1,2 @@
+this.BX=this.BX||{},this.BX.Denvic=this.BX.Denvic||{},function(t,e){"use strict";BX.Vue.component("bx-table-head",{props:{head:{type:String,required:!0}},template:'\n\t  \t<div>\n\t  \t\t<div class="title">\n\t\t\t  <slot name="sorter"></slot>\n\t\t\t  {{ head }}\n\t\t\t</div>\n\t  \t\t<slot name="filter"></slot>\n\t\t</div> \n\t  '})}(this.BX.Denvic.Table=this.BX.Denvic.Table||{});
+//# sourceMappingURL=table-head.bundle.js.map

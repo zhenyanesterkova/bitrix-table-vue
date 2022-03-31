@@ -1,0 +1,87 @@
+<div>
+			<div>
+				Использовать бесконечный скролл
+				<input
+					type="checkbox"
+					v-model="infScrollable"
+				/>
+			</div>
+			<div>
+				Использовать виртуальный скролл
+				<input
+					type="checkbox"
+					v-model="virtualScrollable"
+				/>
+			</div>
+			<bx-paginators
+				v-if="!infScrollable"
+				v-bind:pageSize="pageSize"
+				v-bind:pageNumber="pageNumber"
+				v-bind:totalPages="totalPages"
+				v-on:paginate="updatePagination($event)"
+			/>
+			<bx-vue-table
+				v-bind:rows="computedRows"
+				v-bind:columns="columns"
+				v-bind:columnsHeads="columnsHeads"
+				v-bind:getKey="computedGetKey"
+				v-bind:defaultHeadClass="{ ['table-head']: true }"
+				v-bind:defaultCellClass="{ ['table-cell']: true }"
+				v-bind:useVirtualScroll="virtualScrollable"
+				v-bind:virtualScrollHeight="20"
+				v-bind:virtualScrollCount="25"
+				class="table"
+			>
+				<template v-if="virtualScrollable" v-slot:start-tbody>
+					<tr
+						v-bind:colspan="rowSize"
+						id="virtualScrollTopFiller"
+						v-bind:style="{height: {{virtualScrollTopFillerSize}}px"
+					/>
+				</template>
+				<template v-for="column in columns" v-slot:[{{column}}-head]="{ head }">
+					<bx-table-head v-bind:head="head" v-bind:key="column">
+						<template v-slot:sorter
+							><bx-sorters
+								v-bind:sort="sorts[column]"
+								v-bind:column="column"
+								v-bind:index="sortsIndexes[column]"
+								v-on:sort="updateSorts($event)"
+						/></template>
+						<template v-slot:filter
+							><bx-filters
+								v-bind:is="filtersComponents[column]"
+								v-bind:filter="filters[column]"
+								v-bind:column="column"
+								v-bind:type="filtersTypes[column]"
+								v-on:filter="updateFilters($event)"
+						/></template>
+					</my-table-head>
+				</template>
+
+				<template v-slot:email-cell="{ row }">
+					<a :href="{mailto: {{row.email}} }">{{ row.email }}</a>
+				</template>
+				<template v-slot:end-tbody>
+					<tr
+						v-if="virtualScrollable"
+						v-bind:colspan="rowSize"
+						id="virtualScrollBottomFiller"
+						v-bind:style="{height: {{virtualScrollBottomFillerSize}}px }"
+					/>
+					<tr
+						v-if="infScrollable"
+						v-bind:colspan="rowSize"
+						id="infScrollBottomAnchor"
+					/>
+					<bx-loader v-if="bottomLoader" v-bind:colspan="rowSize" />
+				</template>
+			</bx-vue-table>
+			<bx-paginators
+				v-if="!infScrollable"
+				v-bind:pageSize="pageSize"
+				v-bind:pageNumber="pageNumber"
+				v-bind:totalPages="totalPages"
+				v-on:paginate="updatePagination($event)"
+			/>
+		</div>
