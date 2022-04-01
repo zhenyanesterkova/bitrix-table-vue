@@ -1,17 +1,9 @@
-let worker;
-if (window.Worker) {
-    worker = new Worker("data-worker.js");
-}
+// let worker;
+// if (window.Worker) {
+//     worker = new Worker("data-worker.js");
+// }
 
 function updateDataWithoutDebounce(data) {
-    // В реальном проекте здесь будет обращение к API,
-    // у меня здесь ображение к тестовому Web Worker'у
-    worker.onmessage = function (e) {
-        
-        data.rows = data.rows.concat(e.data.rows);
-        data.totalPages = data.pageSize ? Math.ceil(e.data.length / data.pageSize) : 1;
-        data.bottomLoader = false;
-    }
     let startIndex;
     let endIndex;
 
@@ -23,15 +15,53 @@ function updateDataWithoutDebounce(data) {
         endIndex = startIndex + data.pageSize;
     }
 
-    const message = {
-        sorts: data.sorts,
-        sortsOrder: data.sortsOrder,
-        filters: data.filters,
-        startIndex,
-        endIndex,
-    };
+    BX.ajax({
+        url: '/local/ajax/denvic/ajax-vue.php',
+        data: {
+            sorts: data.sorts,
+            filters: data.filters,
+            navParams: {
+                pageSize: data.pageSize,
+                pageNumber: data.pageNumber,
+                startIndex: startIndex,
+                endIndex: endIndex
+
+            }
+        },
+        method: 'POST',
+        dataType: 'json',
+        timeout: 30,
+        async: true,
+        processData: true,
+        scriptsRunFirst: true,
+        emulateOnload: true,
+        start: true,
+        cache: false,
+        onsuccess: function(result){
+            
+                console.log(result);
+                data.rows = result.rows;
+                
+                data.totalPages = data.pageSize ? Math.ceil(result.length / data.pageSize) : 1;
+                data.bottomLoader = false;
+                data.lists.typeMeasure = Object.assign({}, result.typeMeasureList);
+                data.lists.industry = Object.assign({}, result.industryList);
+                data.lists.status = Object.assign({}, result.statusList);
+        },
+        onfailure: function(){
+            console.log('no data');
+        }
+    });
+    
+
+    //  if (endIndex && endIndex > 0) {
+    //      let test;
+    //     test = Array.from(data.rows);
+    //     console.log(typeof test);
+    //     data.rows = data.rows.slice(startIndex, endIndex);
+    //  }
    
-    worker.postMessage(message);
+    // worker.postMessage(message);
 }
 
 let timeout;
@@ -47,8 +77,8 @@ export function updateData(data, clear) {
         clearTimeout(timeout);
         timeout = null;
     }
-
+    updateDataWithoutDebounce(data);
     timeout = setTimeout(() => {
-        updateDataWithoutDebounce(data);
+        
     }, 1000);
 }

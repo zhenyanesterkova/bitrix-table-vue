@@ -19,9 +19,13 @@ Vue.component('bx-filters', {
             required: true,
             default: 'text'
         },
+        values: {
+            type: Object,
+        }
     },
     methods: {
         emitFilter(filter) {
+            console.log(filter);
             this.$emit("filter", { filter, column: this.column });
         },
         setLeft(left) {
@@ -51,8 +55,8 @@ Vue.component('bx-filters', {
     },
     template: `
     <div>
-    	<div>
-    	  <div>
+    	<div v-if="type === 'number'">
+    	  <div >
     	    От
     	    <input v-bind:type="type" v-bind:value="left" @input="setLeft($event.target.value)" />
     	  </div>
@@ -65,13 +69,28 @@ Vue.component('bx-filters', {
     	    />
     	  </div>
     	</div>
-		<div>
+		<div v-if="type === 'text'">
             
       		<input
               v-bind:type="type"
               v-bind:value="filter"
       		  @change="emitFilter($event.target.value)"
       		/>
+    	</div>
+        <div v-if="type === 'select'">
+            <select 
+                :name="column"
+                @click="emitFilter($event.target.value)"
+            >
+                <option 
+                    v-for="value in values" 
+                    :key="value" 
+                    :value="value"
+                    
+                >
+                        {{value}}
+                </option>
+            </select>
     	</div>
         </div>
   	`,

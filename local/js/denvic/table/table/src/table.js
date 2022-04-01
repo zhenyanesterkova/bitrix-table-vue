@@ -53,12 +53,13 @@ Vue.component('bx-table', {
 					<tr
 						v-bind:colspan="rowSize"
 						id="virtualScrollTopFiller"
-						v-bind:style="{height: virtualScrollTopFillerSize + 'px'}"
+						v-bind:style="{height: \`\${virtualScrollTopFillerSize}px\`}"
 					/>
 				</template>
+				
 				<template v-for="column in columns" v-slot:[\`\${column}-head\`]="{head}">
 					<bx-table-head v-bind:head="head" v-bind:key="column">
-						<template v-slot:sorter
+						<template v-if="column === 'announcementDate'" v-slot:sorter
 							><bx-sorters
 								v-bind:sort="sorts[column]"
 								v-bind:column="column"
@@ -71,14 +72,17 @@ Vue.component('bx-table', {
 								v-bind:filter="filters[column]"
 								v-bind:column="column"
 								v-bind:type="filtersTypes[column]"
+								:values="lists[column]"
 								@filter="updateFilters($event)"
 						/></template>
 					</bx-table-head>
 				</template>
 
 				
-				<template v-slot:email-cell="{row}">
-					<a :href="\`mailto:\${row.email}\`">{{ row.email }}</a>
+				<template v-slot:source-cell="{row}">
+					<noindex>
+						<a rel="nofollow" :href="\`\${row.source}\`">{{ row.source }}</a>
+					</noindex>
 				</template>
 
 				<template v-slot:end-tbody>
@@ -106,32 +110,51 @@ Vue.component('bx-table', {
 			/>
 		</div>
 	`,
+	props:{
+		url: '',
+	},
 	data() {
 		return {
 			rows: [],
-
-			columns: ["id", "age", "name", "login", "email"],
+			columns: ["typeMeasure", "industry", "status", "description", "announcementDate", "validity", "supportAmount", "source"],
+			
+			lists: {
+				typeMeasure: {
+					0: ''
+				},
+				industry: {},
+				status: {},
+			},
 			columnsHeads: {
-				id: "ID",
-				age: "Возраст",
-				name: "Имя",
-				login: "Логин",
-				email: "EMail",
+				typeMeasure: "Тип",
+				industry: "Отрасль",
+				status: "Статус",
+				description: "Описание",
+				announcementDate: "Дата объявления",
+				validity: "Срок действия",
+				supportAmount: "Сумма",
+				source: "Источник",
 			},
 
 			filtersTypes: {
-				id: "number",
-				age: "number",
-				name: "text",
-				login: "text",
-				email: "text",
+				typeMeasure: "select",
+				industry: "select",
+				status: "select",
+				description: "",
+				announcement_date: "",
+				validity: "",
+				supportAmount: "",
+				source: "",
 			},
 			filtersComponents: {
-				id: 'bx-filters',
-				age: 'bx-filters',
-				name: 'bx-filters',
-				login: 'bx-filters',
-				email: 'bx-filters',
+				typeMeasure: "bx-filters",
+				industry: "bx-filters",
+				status: "bx-filters",
+				description: "",
+				announcement_date: "",
+				validity: "",
+				supportAmount: "",
+				source: "",
 			},
 
 			bottomLoader: false,
@@ -162,6 +185,9 @@ Vue.component('bx-table', {
 		computedRows() {
 			return this.virtualScrollable ? this.virtualScrollRows : this.rows;
 		},
+		computedHeadLists() {
+			return this.virtualScrollable ? this.virtualScrollRows : this.rows;
+		},
 		computedGetKey() {
 			return this.virtualScrollable ? this.virtualScrollGetKey : this.getKey;
 		},
@@ -173,6 +199,7 @@ Vue.component('bx-table', {
 		updateData(infScroll) {
 			updateData(this, !infScroll);
 		},
+		
 	},
 	created() {
 		this.updateData();

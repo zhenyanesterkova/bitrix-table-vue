@@ -1,4 +1,4 @@
-import Vue from "vue"
+import { Vue } from 'ui.vue';
 
 export default {
     data() {
