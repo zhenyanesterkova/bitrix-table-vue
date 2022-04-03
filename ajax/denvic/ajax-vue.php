@@ -5,9 +5,14 @@ $arSelect = Array("ID", "IBLOCK_ID", "PROPERTY_TYPE_MEASURE", "PROPERTY_INDUSTRY
 $arFilter = Array("IBLOCK_ID" => $IBLOCK_ID, "ACTIVE"=>"Y");
 $arSorter = Array();
 $arNav = Array();
-// if (isset($_POST['navParams'])){
-//     $arNav = array("iNumPage" => $_POST['navParams']["pageNumber"], "nPageSize" => $_POST['navParams']["pageSize"]);
-// }
+if (isset($_POST['navParams'])){
+    // if (isset($_POST['navParams']['infScroll']) && ($_POST['navParams']['infScroll'] === 'true')) {
+        
+    //      $arNav = array("nTopCount" => $_POST['navParams']['sizeScroll'], "nOffset" => $_POST['navParams']['startIndex'], 'checkOutOfRange' => true);
+    // } else {
+        $arNav = array("iNumPage" => $_POST['navParams']["pageNumber"], "nPageSize" => $_POST['navParams']["pageSize"]);
+    // }
+}
 
 if (isset($_POST['sorts']['announcementDate'])){
     if ($_POST['sorts']['announcementDate'] === "inc") {
@@ -31,6 +36,8 @@ if (isset($_POST['filters'])){
 $res = CIBlockElement::GetList($arSorter, $arFilter, false, $arNav, $arSelect);
 $rows = array();
 while($ob = $res->GetNextElement()) {
+    $navPageCount = $res->NavPageCount;
+    $rowsCount = $res->NavRecordCount;
     $arElements = $ob->GetFields();
     $rows[] = array(
         "typeMeasure" => $arElements["PROPERTY_TYPE_MEASURE_VALUE"],
@@ -43,12 +50,14 @@ while($ob = $res->GetNextElement()) {
         "source" => $arElements["PROPERTY_SOURCE_VALUE"]["TEXT"],
     );
 }
-
-if (isset($_POST['navParams'])){
-    if ($_POST['navParams']['endIndex'] && $_POST['navParams']['endIndex'] > 0) {
-        $rows = array_slice($rows, $_POST['navParams']['startIndex'], $_POST['navParams']['pageSize']);
-    }
-}
+// if ($_POST['navParams']['endIndex'] >= $rowsCount) {
+//     $rows[] = array();
+// }
+// if (isset($_POST['navParams'])){
+//     if ($_POST['navParams']['endIndex'] && $_POST['navParams']['endIndex'] > 0) {
+//         $rows = array_slice($rows, $_POST['navParams']['startIndex'], $_POST['navParams']['pageSize']);
+//     }
+// }
 
 $typeMeasureList = array();
 $industryList = array();
@@ -77,12 +86,14 @@ array_unshift($statusList, "");
 
 $result = [
     'isSuccess' => true,
-    'length' => count($rows),
+    'length' => $rowsCount,
     'rows' => $rows,
     'typeMeasureList' => $typeMeasureList,
     'industryList' => $industryList,
     'statusList' => $statusList,
-    'filters' => $filters
+    'filters' => $filters,
+    'navPageCount' => $navPageCount,
+    'test' => $_POST['navParams']
 ];
 
 header("Content-type: application/json; charset=utf-8");

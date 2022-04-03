@@ -1,28 +1,28 @@
-import {Vue} from 'ui.vue'
+import { Vue } from 'ui.vue'
 
 Vue.component('bx-paginators', {
 	props: {
 		totalPages: {
-		  type: Number,
-		  default: null,
+			type: Number,
+			default: null,
 		},
 		pageSize: {
-            type: Number,
-            default: 0,
-        },
-        pageNumber: {
-            type: Number,
-            default: 1,
-        },
+			type: Number,
+			default: 1,
+		},
+		pageNumber: {
+			type: Number,
+			default: 1,
+		},
 	},
 	methods: {
-        setPageSize(pageSize) {
-            this.$emit("paginate", { pageSize, pageNumber: 1 });
-        },
-        setPageNumber(pageNumber) {
-            this.$emit("paginate", { pageSize: this.pageSize, pageNumber });
-        },
-    },
+		setPageSize(pageSize) {
+			this.$emit("paginate", { pageSize, pageNumber: 1 });
+		},
+		setPageNumber(pageNumber) {
+			this.$emit("paginate", { pageSize: this.pageSize, pageNumber });
+		},
+	},
 	template: `
 		<div class="paginator">
     		<div>
@@ -31,7 +31,7 @@ Vue.component('bx-paginators', {
     		    type="number"
     		    v-bind:value="pageSize"
     		    @input="setPageSize(+$event.target.value)"
-    		    min="0"
+    		    min="1"
     		  />
     		</div>
     		<div>

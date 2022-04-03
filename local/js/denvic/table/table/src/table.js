@@ -110,14 +110,14 @@ Vue.component('bx-table', {
 			/>
 		</div>
 	`,
-	props:{
+	props: {
 		url: '',
 	},
 	data() {
 		return {
 			rows: [],
 			columns: ["typeMeasure", "industry", "status", "description", "announcementDate", "validity", "supportAmount", "source"],
-			
+
 			lists: {
 				typeMeasure: {
 					0: ''
@@ -163,8 +163,8 @@ Vue.component('bx-table', {
 			totalPages: 0,
 
 			infScrollable: false,
-			infScrollStartSize: 100,
-			infScrollStepSize: 50,
+			infScrollStartSize: 10,
+			infScrollStepSize: 5,
 			infScrollTriggerOffset: 1000,
 
 			virtualScrollable: false,
@@ -199,7 +199,7 @@ Vue.component('bx-table', {
 		updateData(infScroll) {
 			updateData(this, !infScroll);
 		},
-		
+
 	},
 	created() {
 		this.updateData();
