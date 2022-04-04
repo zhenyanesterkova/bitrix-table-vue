@@ -16,6 +16,7 @@ return [
 		'denvic.table.paginators',
 		'denvic.table.vue-table',
 		'ui.vue',
+		'jquery',
 	],
 	'skip_core' => true,
 ];

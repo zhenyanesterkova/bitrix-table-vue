@@ -9,6 +9,7 @@ export default {
     },
     methods: {
         updateFilters({ filter, column }) {
+            this.rows = [];
             Vue.delete(this.filters, column);
             if (filter) {
                 Vue.set(this.filters, column, filter);
