@@ -117,7 +117,7 @@ Vue.component('bx-table', {
 		return {
 			rows: [],
 			columns: ["typeMeasure", "industry", "status", "description", "announcementDate", "validity", "supportAmount", "source"],
-
+			length: 0,
 			lists: {
 				typeMeasure: {
 					0: ''
@@ -163,9 +163,9 @@ Vue.component('bx-table', {
 			totalPages: 0,
 
 			infScrollable: false,
-			infScrollStartSize: 10,
+			infScrollStartSize: 5,
 			infScrollStepSize: 5,
-			infScrollTriggerOffset: 1000,
+			infScrollTriggerOffset: 100,
 
 			virtualScrollable: false,
 			virtualScrollBufferSize: 10,
@@ -206,6 +206,7 @@ Vue.component('bx-table', {
 	},
 	watch: {
 		infScrollable() {
+			this.rows = [];
 			(this.paginable = !this.infScrollable), this.updateData();
 		},
 	},

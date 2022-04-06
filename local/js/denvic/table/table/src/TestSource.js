@@ -6,13 +6,17 @@
 function updateDataWithoutDebounce(data) {
     let startIndex;
     let endIndex;
-
+    let sizeScroll;
+    let numScroll;
     if (data.infScrollable) {
         startIndex = data.rows.length;
         endIndex = startIndex ? startIndex + data.infScrollStepSize : data.infScrollStartSize;
-        if (endIndex >= data.length) {
-            return;
-        }
+        sizeScroll = data.infScrollStepSize;
+        numScroll = startIndex/data.infScrollStepSize + 1;
+
+        // if (numScroll > data.totalPages) {
+        //     return;
+        // }
     } else if (data.paginable) {
         startIndex = data.pageSize * (data.pageNumber - 1);
         endIndex = startIndex + data.pageSize;
@@ -27,9 +31,8 @@ function updateDataWithoutDebounce(data) {
                 pageSize: data.pageSize,
                 pageNumber: data.pageNumber,
                 infScroll: data.infScrollable,
-                sizeScroll: endIndex - startIndex,
-                startIndex: startIndex,
-                endIndex: endIndex
+                sizeScroll: sizeScroll,
+                numScroll: numScroll
             }
         },
         method: 'POST',
@@ -46,12 +49,14 @@ function updateDataWithoutDebounce(data) {
             console.log(result);
             if (data.infScrollable) {
                 data.rows = data.rows.concat(result.rows);
+                data.length = +result.length;
             } else {
                 data.rows = result.rows;
+                data.length = +result.length;
             }
 
             data.totalPages = result.navPageCount;
-            data.length = result.length;
+            
             //data.totalPages = data.pageSize ? Math.ceil(result.length / data.pageSize) : 1;
             data.bottomLoader = false;
             data.lists.typeMeasure = Object.assign({}, result.typeMeasureList);

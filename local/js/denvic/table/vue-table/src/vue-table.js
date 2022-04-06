@@ -121,7 +121,7 @@ Vue.component('bx-vue-table', {
 				<thead v-bind:class="theadClass" v-bind:style="theadStyle">
 					<slot name="start-thead"></slot>
 						<tr>
-							<th
+							<td
 								v-for="column in columns"
 								v-bind:key="column"
 								v-bind:class="computedHeadsClasses[column]"
@@ -130,7 +130,7 @@ Vue.component('bx-vue-table', {
 								<slot :name="\`\${column}-head\`" v-bind:head="computedColumnsHeads[column]">
 									{{ computedColumnsHeads[column] }}
 								</slot>
-							</th>
+							</td>
 						</tr>
 					<slot name="end-thead"></slot>
 				</thead>
