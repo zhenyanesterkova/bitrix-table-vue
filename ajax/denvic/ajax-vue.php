@@ -6,12 +6,12 @@ $arFilter = Array("IBLOCK_ID" => $IBLOCK_ID, "ACTIVE"=>"Y");
 $arSorter = Array();
 $arNav = Array();
 if (isset($_POST['navParams'])){
-    // if (isset($_POST['navParams']['infScroll']) && ($_POST['navParams']['infScroll'] === 'true')) {
+    if (isset($_POST['navParams']['infScroll']) && ($_POST['navParams']['infScroll'] === 'true')) {
         
-    //      $arNav = array("nTopCount" => $_POST['navParams']['sizeScroll'], "nOffset" => $_POST['navParams']['startIndex'], 'checkOutOfRange' => true);
-    // } else {
+         $arNav = array("iNumPage" => $_POST['navParams']['numScroll'], "nPageSize" => $_POST['navParams']['sizeScroll']);
+    } else {
         $arNav = array("iNumPage" => $_POST['navParams']["pageNumber"], "nPageSize" => $_POST['navParams']["pageSize"]);
-    // }
+    }
 }
 
 if (isset($_POST['sorts']['announcementDate'])){
